@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Core", "MailQ.Core\MailQ.Core.csproj", "{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Worker", "MailQ.Worker\MailQ.Worker.csproj", "{95026665-8602-440D-AB6A-B43D0C161BE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Core.Tests", "MailQ.Core.Tests\MailQ.Core.Tests.csproj", "{2D37493F-224E-4AB3-A623-07AF90BF7511}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95026665-8602-440D-AB6A-B43D0C161BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95026665-8602-440D-AB6A-B43D0C161BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95026665-8602-440D-AB6A-B43D0C161BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95026665-8602-440D-AB6A-B43D0C161BE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D37493F-224E-4AB3-A623-07AF90BF7511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D37493F-224E-4AB3-A623-07AF90BF7511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D37493F-224E-4AB3-A623-07AF90BF7511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D37493F-224E-4AB3-A623-07AF90BF7511}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
