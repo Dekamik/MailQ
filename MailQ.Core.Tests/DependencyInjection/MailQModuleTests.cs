@@ -4,13 +4,13 @@ using MailQ.Core.DependencyInjection;
 
 namespace MailQ.Core.Tests.DependencyInjection;
 
-public class DependencyInjectionTests
+public class MailQModuleTests
 {
     [Fact]
     public void Load_Any_ResolvesAllRegisteredDependencies()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterModule<EmailerModule>();
+        builder.RegisterModule<MailQModule>();
         
         var container = builder.Build();
         using var scope = container.BeginLifetimeScope();

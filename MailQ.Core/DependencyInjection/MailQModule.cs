@@ -3,7 +3,7 @@ using MailQ.Core.Email;
 
 namespace MailQ.Core.DependencyInjection;
 
-public class EmailerModule : Module
+public class MailQModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
