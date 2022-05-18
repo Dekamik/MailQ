@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using MailQ.Core.Configuration;
+using MailQ.Core.Email;
 using MailQ.Protobuf;
+using MimeKit;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Serilog;
@@ -13,9 +15,12 @@ public class Poller : IPoller, IDisposable
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly MailQConfiguration _configuration;
+    private readonly IEmailer _emailer;
 
-    public Poller(IMailQConfigurationFactory configurationFactory, IConnectionFactory connectionFactory)
+    public Poller(IMailQConfigurationFactory configurationFactory, IConnectionFactory connectionFactory, 
+        IEmailer emailer)
     {
+        _emailer = emailer;
         _configuration = configurationFactory.LoadFromEnvironmentVariables();
         _connection = connectionFactory.CreateConnection();
         Log.Information("Connection to RabbitMQ established");
@@ -43,11 +48,24 @@ public class Poller : IPoller, IDisposable
                 try
                 {
                     var mail = Mail.Parser.ParseFrom(ea.Body.ToArray());
+                    Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", 
+                        mail.Subject, mail.Body, string.Join(", ", mail.To));
+
+                    var mimeMessage = new MimeMessage();
+                    mimeMessage.From.Add(new MailboxAddress(_configuration.EmailAlias, _configuration.EmailAddress));
+                    mimeMessage.To.AddRange(mail.To.Select(address => new MailboxAddress(address, address)));
+                    mimeMessage.Subject = mail.Subject;
+                    mimeMessage.Body = new TextPart("plain")
+                    {
+                        Text = mail.Body
+                    };
+                    
+                    await _emailer.SendEmail(mimeMessage);
                 }
                 finally
                 {
                     stopwatch.Stop();
-                    Log.Verbose("Processed {Message} in {Elapsed}", ea.Body.ToString(), stopwatch.Elapsed);
+                    Log.Verbose("Processed email in {Elapsed}", stopwatch.Elapsed);
                     channel1.BasicAck(ea.DeliveryTag, false);
                 }
             }

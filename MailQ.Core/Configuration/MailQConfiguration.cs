@@ -6,6 +6,8 @@ public class MailQConfiguration
     public int EmailPort { get; set; }
     public string EmailUser { get; set; }
     public string EmailPassword { get; set; }
+    public string EmailAlias { get; set; }
+    public string EmailAddress { get; set; }
     
     public string RabbitMqConnectionString { get; set; }
     public string RabbitMqDataExchange { get; set; }
