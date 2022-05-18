@@ -1,6 +1,7 @@
 using FakeItEasy;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using MailQ.Core.Configuration;
 using MailQ.Core.Email;
 using MimeKit;
 
@@ -13,24 +14,32 @@ public class EmailerTests
 
     public EmailerTests()
     {
+        var configuration = new MailQConfiguration
+        {
+            EmailHost = "AnyHost",
+            EmailPort = 25,
+            EmailUser = "AnyUser",
+            EmailPassword = "AnyPassword"
+        };
+        var configurationFactory = A.Fake<IMailQConfigurationFactory>();
+        A.CallTo(() => configurationFactory.LoadFromEnvironmentVariables())
+            .Returns(configuration);
+
         var smtpClientFactory = A.Fake<ISmtpClientFactory>();
         _smtp = A.Fake<ISmtpClient>();
         A.CallTo(() => smtpClientFactory.CreateSmtpClient())
             .Returns(_smtp);
-        _emailer = new Emailer(smtpClientFactory);
         
-        Environment.SetEnvironmentVariable("EMAIL_HOST", "AnyHost");
-        Environment.SetEnvironmentVariable("EMAIL_PORT", "25");
-        Environment.SetEnvironmentVariable("EMAIL_USER", "AnyUser");
-        Environment.SetEnvironmentVariable("EMAIL_PASSWORD", "AnyPassword");
+        _emailer = new Emailer(configurationFactory, smtpClientFactory);
     }
 
     [Fact]
     public void Constructor_Any_CreatesSmtpClientThroughFactory()
     {
+        var configurationFactory = A.Fake<IMailQConfigurationFactory>();
         var clientFactory = A.Fake<ISmtpClientFactory>();
 
-        var unused = new Emailer(clientFactory);
+        var _ = new Emailer(configurationFactory, clientFactory);
 
         A.CallTo(() => clientFactory.CreateSmtpClient())
             .MustHaveHappenedOnceExactly();

@@ -1,20 +1,38 @@
+using MailQ.Core.Polling;
+using RabbitMQ.Client.Exceptions;
+using Serilog;
+
 namespace MailQ.Worker;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
+    private readonly IPoller _poller;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(IPoller poller)
     {
-        _logger = logger;
+        _poller = poller;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            await Task.Delay(1000, stoppingToken);
+            await _poller.DoPolling(stoppingToken);
+        }
+        catch (BrokerUnreachableException ex)
+        {
+            Log.Fatal(ex, "Broker unreachable at {Uri}", 
+                EnvironmentVariables.RabbitMqConnectionString);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Unhandled error occurred");
+            throw;
+        }
+        finally
+        {
+            Log.CloseAndFlush();
         }
     }
 }
