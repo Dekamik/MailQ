@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using MailQ.Core.Configuration;
+using MailQ.Protobuf;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Serilog;
@@ -38,10 +39,10 @@ public class Poller : IPoller, IDisposable
             using (LogContext.PushProperty("CorrelationId", ea.BasicProperties.CorrelationId))
             {
                 var stopwatch = new Stopwatch();
-
+                stopwatch.Start();
                 try
                 {
-
+                    var mail = Mail.Parser.ParseFrom(ea.Body.ToArray());
                 }
                 finally
                 {
