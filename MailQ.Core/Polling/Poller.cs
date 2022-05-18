@@ -16,10 +16,12 @@ public class Poller : IPoller, IDisposable
     private readonly IModel _channel;
     private readonly MailQConfiguration _configuration;
     private readonly IEmailer _emailer;
+    private readonly IMimeConverter _mimeConverter;
 
     public Poller(IMailQConfigurationFactory configurationFactory, IConnectionFactory connectionFactory, 
-        IEmailer emailer)
+        IEmailer emailer, IMimeConverter mimeConverter)
     {
+        _mimeConverter = mimeConverter;
         _emailer = emailer;
         _configuration = configurationFactory.LoadFromEnvironmentVariables();
         _connection = connectionFactory.CreateConnection();
@@ -51,14 +53,7 @@ public class Poller : IPoller, IDisposable
                     Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", 
                         mail.Subject, mail.Body, string.Join(", ", mail.To));
 
-                    var mimeMessage = new MimeMessage();
-                    mimeMessage.From.Add(new MailboxAddress(_configuration.EmailAlias, _configuration.EmailAddress));
-                    mimeMessage.To.AddRange(mail.To.Select(address => new MailboxAddress(address, address)));
-                    mimeMessage.Subject = mail.Subject;
-                    mimeMessage.Body = new TextPart("plain")
-                    {
-                        Text = mail.Body
-                    };
+                    var mimeMessage = _mimeConverter.ToMimeMessage(mail);
                     
                     await _emailer.SendEmail(mimeMessage);
                 }
