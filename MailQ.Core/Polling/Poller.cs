@@ -20,8 +20,7 @@ public class Poller : IPoller, IDisposable
     private readonly IConsumerFactory _consumerFactory;
     
     public readonly EventHandler<BasicDeliverEventArgs> HandleMailEvent = MailEvent;
-
-    [ExcludeFromCodeCoverage]
+    
     private static async void MailEvent(object? model, BasicDeliverEventArgs ea)
     {
         using (LogContext.PushProperty("CorrelationId", ea.BasicProperties?.CorrelationId ?? null))
