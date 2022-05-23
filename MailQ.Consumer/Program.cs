@@ -4,12 +4,10 @@ using MailQ.Core.DependencyInjection;
 using MailQ.Consumer;
 using MailQ.Core.Configuration;
 using Serilog;
-using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Sinks.Grafana.Loki;
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .Enrich.WithProperty("Project", "MailQ")
     .Enrich.WithProperty("Application", "MailQ.Consumer")
