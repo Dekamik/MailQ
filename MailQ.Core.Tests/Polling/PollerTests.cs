@@ -83,7 +83,8 @@ public class PollerTests
         };
         var ea = new BasicDeliverEventArgs
         {
-            Body = mail.ToByteArray()
+            Body = mail.ToByteArray(),
+            DeliveryTag = 1L
         };
         var mimeMessage = new MimeMessage();
 
@@ -96,6 +97,8 @@ public class PollerTests
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => _emailer.SendEmail(mimeMessage))
             .MustHaveHappenedOnceExactly();
+        A.CallTo(() => _channel.BasicAck(ea.DeliveryTag, false))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Fact]
@@ -104,7 +107,7 @@ public class PollerTests
         var cancellationToken = new CancellationTokenSource();
         cancellationToken.Cancel();
         
-        var pollingTask = _poller.DoPolling(cancellationToken.Token);
+        var _ = _poller.DoPolling(cancellationToken.Token);
 
         A.CallTo(() => _channel.ExchangeDeclare(_configuration.RabbitMqDataExchange, "direct", 
                 true, false, default))

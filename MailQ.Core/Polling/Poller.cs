@@ -31,7 +31,8 @@ public class Poller : IPoller, IDisposable
             try
             {
                 var mail = Mail.Parser.ParseFrom(ea.Body.ToArray());
-                Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", mail.Subject, mail.Body, string.Join(", ", mail.To));
+                Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", 
+                    mail.Subject, mail.Body, string.Join(", ", mail.To));
 
                 var mimeMessage = _mimeConverter.ToMimeMessage(mail);
                 await _emailer.SendEmail(mimeMessage);
