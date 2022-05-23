@@ -13,7 +13,8 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithProperty("Project", "MailQ")
     .Enrich.WithProperty("Application", "MailQ.Consumer")
-    .WriteTo.GrafanaLoki(EnvironmentVariables.LokiConnectionString ?? throw new InvalidOperationException("Loki connection string must be set"), 
+    .WriteTo.GrafanaLoki(EnvironmentVariables.LokiConnectionString 
+                         ?? throw new InvalidOperationException("Loki connection string must be set"), 
         createLevelLabel: true)
     .Enrich.WithExceptionDetails()
     .Enrich.WithEnvironmentName()
