@@ -102,12 +102,12 @@ public class PollerTests
     }
 
     [Fact]
-    public void DoPolling_Any_InitializesPolling()
+    public async Task DoPolling_Any_InitializesPolling()
     {
         var cancellationToken = new CancellationTokenSource();
-        cancellationToken.Cancel();
-        
-        var _ = _poller.DoPolling(cancellationToken.Token);
+        cancellationToken.CancelAfter(250);
+
+        await _poller.DoPolling(cancellationToken.Token);
 
         A.CallTo(() => _channel.ExchangeDeclare(_configuration.RabbitMqDataExchange, "direct", 
                 true, false, default))
