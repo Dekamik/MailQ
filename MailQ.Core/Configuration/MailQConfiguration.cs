@@ -1,5 +1,9 @@
-﻿namespace MailQ.Core.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable CS8618
+namespace MailQ.Core.Configuration;
+
+[ExcludeFromCodeCoverage]
 public class MailQConfiguration
 {
     public string EmailHost { get; set; }
