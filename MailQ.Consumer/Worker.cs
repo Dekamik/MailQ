@@ -3,7 +3,7 @@ using MailQ.Core.Polling;
 using RabbitMQ.Client.Exceptions;
 using Serilog;
 
-namespace MailQ.Worker;
+namespace MailQ.Consumer;
 
 public class Worker : BackgroundService
 {

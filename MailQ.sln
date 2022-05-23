@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Core", "MailQ.Core\MailQ.Core.csproj", "{7359FF5C-3DBE-475F-BAD7-C13E1CEDE45D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Worker", "MailQ.Worker\MailQ.Worker.csproj", "{95026665-8602-440D-AB6A-B43D0C161BE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Consumer", "MailQ.Consumer\MailQ.Consumer.csproj", "{95026665-8602-440D-AB6A-B43D0C161BE6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Core.Tests", "MailQ.Core.Tests\MailQ.Core.Tests.csproj", "{2D37493F-224E-4AB3-A623-07AF90BF7511}"
 EndProject
