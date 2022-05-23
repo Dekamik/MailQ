@@ -16,7 +16,6 @@ public class MailQConfigurationFactory : IMailQConfigurationFactory
             EmailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? throw new ArgumentNullException("EMAIL_PASSWORD"),
             EmailAlias = Environment.GetEnvironmentVariable("EMAIL_ALIAS") ?? throw new ArgumentNullException("EMAIL_ALIAS"),
             EmailAddress = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? throw new ArgumentNullException("EMAIL_ADDRESS"),
-            RabbitMqConnectionString = Environment.GetEnvironmentVariable("RABBITMQ_CONNECTION_STRING") ?? throw new ArgumentNullException("RABBITMQ_CONNECTION_STRING"),
             RabbitMqDataExchange = Environment.GetEnvironmentVariable("RABBITMQ_DATA_EXCHANGE") ?? throw new ArgumentNullException("RABBITMQ_DATA_EXCHANGE"),
             RabbitMqDataQueue = Environment.GetEnvironmentVariable("RABBITMQ_DATA_QUEUE") ?? throw new ArgumentNullException("RABBITMQ_DATA_QUEUE"),
             RabbitMqRoutingKey = Environment.GetEnvironmentVariable("RABBITMQ_ROUTING_KEY") ?? throw new ArgumentNullException("RABBITMQ_ROUTING_KEY")

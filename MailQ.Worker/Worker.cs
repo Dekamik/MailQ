@@ -1,3 +1,4 @@
+using MailQ.Core.Configuration;
 using MailQ.Core.Polling;
 using RabbitMQ.Client.Exceptions;
 using Serilog;

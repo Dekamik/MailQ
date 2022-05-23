@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using MailQ.Core.Configuration;
 using MailQ.Core.Email;
 using MailQ.Protobuf;
-using MimeKit;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Serilog;

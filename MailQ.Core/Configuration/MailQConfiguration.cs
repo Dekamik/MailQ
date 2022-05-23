@@ -13,7 +13,6 @@ public class MailQConfiguration
     public string EmailAlias { get; set; }
     public string EmailAddress { get; set; }
     
-    public string RabbitMqConnectionString { get; set; }
     public string RabbitMqDataExchange { get; set; }
     public string RabbitMqDataQueue { get; set; }
     public string RabbitMqRoutingKey { get; set; }

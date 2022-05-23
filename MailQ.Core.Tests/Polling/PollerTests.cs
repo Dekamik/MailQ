@@ -27,7 +27,6 @@ public class PollerTests
     {
         _configuration = new MailQConfiguration
         {
-            RabbitMqConnectionString = "localhost:0",
             RabbitMqDataExchange = "AnyExchange",
             RabbitMqDataQueue = "AnyQueue",
             RabbitMqRoutingKey = "AnyRoutingKey"

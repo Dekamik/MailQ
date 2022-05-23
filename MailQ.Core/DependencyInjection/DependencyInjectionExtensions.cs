@@ -1,5 +1,4 @@
 using Autofac;
-using Autofac.Builder;
 
 namespace MailQ.Core.DependencyInjection;
 

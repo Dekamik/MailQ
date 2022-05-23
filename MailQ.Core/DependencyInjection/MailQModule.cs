@@ -1,7 +1,6 @@
 using Autofac;
 using MailQ.Core.Configuration;
 using MailQ.Core.Email;
-using RabbitMQ.Client;
 
 namespace MailQ.Core.DependencyInjection;
 
