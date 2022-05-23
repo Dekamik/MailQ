@@ -20,7 +20,10 @@ public class MimeConverter : IMimeConverter
         mimeMessage.From.Add(new MailboxAddress(_configuration.EmailAlias, _configuration.EmailAddress));
         mimeMessage.To.AddRange(mail.To.Select(address => new MailboxAddress(address, address)));
         mimeMessage.Subject = mail.Subject;
-        mimeMessage.Body = new TextPart("plain");
+        mimeMessage.Body = new TextPart("plain")
+        {
+            Text = mail.Body
+        };
         
         return mimeMessage;
     }
