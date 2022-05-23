@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using MailQ.Core.Configuration;
 using MailQ.Core.Email;
 using MailQ.Protobuf;
@@ -20,30 +19,6 @@ public class Poller : IPoller, IDisposable
     private readonly IConsumerFactory _consumerFactory;
     
     public readonly EventHandler<BasicDeliverEventArgs> HandleMailEvent = MailEvent;
-    
-    private static async void MailEvent(object? model, BasicDeliverEventArgs ea)
-    {
-        using (LogContext.PushProperty("CorrelationId", ea.BasicProperties?.CorrelationId ?? null))
-        {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            try
-            {
-                var mail = Mail.Parser.ParseFrom(ea.Body.ToArray());
-                Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", 
-                    mail.Subject, mail.Body, string.Join(", ", mail.To));
-
-                var mimeMessage = _mimeConverter.ToMimeMessage(mail);
-                await _emailer.SendEmail(mimeMessage);
-            }
-            finally
-            {
-                stopwatch.Stop();
-                Log.Information("Processed email in {Elapsed}", stopwatch.Elapsed);
-                _channel.BasicAck(ea.DeliveryTag, false);
-            }
-        }
-    }
 
     public Poller(IMailQConfigurationFactory configurationFactory, IConnectionFactory connectionFactory, 
         IEmailer emailer, IMimeConverter mimeConverter, IConsumerFactory consumerFactory)
@@ -88,5 +63,29 @@ public class Poller : IPoller, IDisposable
     {
         _channel.Dispose();
         _connection.Dispose();
+    }
+    
+    private static async void MailEvent(object? model, BasicDeliverEventArgs ea)
+    {
+        using (LogContext.PushProperty("CorrelationId", ea.BasicProperties?.CorrelationId ?? null))
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            try
+            {
+                var mail = Mail.Parser.ParseFrom(ea.Body.ToArray());
+                Log.Information("Received email message with Subject={Subject} and Body={Body} to {To}", 
+                    mail.Subject, mail.Body, string.Join(", ", mail.To));
+
+                var mimeMessage = _mimeConverter.ToMimeMessage(mail);
+                await _emailer.SendEmail(mimeMessage);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Log.Information("Processed email in {Elapsed}", stopwatch.Elapsed);
+                _channel.BasicAck(ea.DeliveryTag, false);
+            }
+        }
     }
 }
