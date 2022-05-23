@@ -13,7 +13,6 @@ namespace MailQ.Core.Tests.Polling;
 public class PollerTests
 {
     private readonly MailQConfiguration _configuration;
-    private readonly IMailQConfigurationFactory _configurationFactory;
     private readonly IMimeConverter _mimeConverter;
     private readonly IEmailer _emailer;
     private readonly IConnection _connection;
@@ -31,8 +30,8 @@ public class PollerTests
             RabbitMqDataQueue = "AnyQueue",
             RabbitMqRoutingKey = "AnyRoutingKey"
         };
-        _configurationFactory = A.Fake<IMailQConfigurationFactory>();
-        A.CallTo(() => _configurationFactory.LoadFromEnvironmentVariables())
+        var configurationFactory = A.Fake<IMailQConfigurationFactory>();
+        A.CallTo(() => configurationFactory.LoadFromEnvironmentVariables())
             .Returns(_configuration);
 
         _mimeConverter = A.Fake<IMimeConverter>();
@@ -49,7 +48,7 @@ public class PollerTests
 
         _consumerFactory = A.Fake<IConsumerFactory>();
 
-        _poller = new Poller(_configurationFactory, _connectionFactory, _emailer, _mimeConverter, _consumerFactory);
+        _poller = new Poller(configurationFactory, _connectionFactory, _emailer, _mimeConverter, _consumerFactory);
     }
 
     [Fact]
@@ -117,6 +116,8 @@ public class PollerTests
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => _channel.QueueBind(_configuration.RabbitMqDataQueue, 
                 _configuration.RabbitMqDataExchange, _configuration.RabbitMqRoutingKey, default))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => _channel.BasicQos(0, 1, false))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => _consumerFactory.CreateEventingBasicConsumer(_channel))
             .MustHaveHappenedOnceExactly();

@@ -76,8 +76,11 @@ public class Poller : IPoller, IDisposable
         _channel.BasicConsume(_configuration.RabbitMqDataQueue, false, consumer);
         
         Log.Information("Consumer available");
-        
-        while (!cancellationToken.IsCancellationRequested) { }
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            
+        }
 
         return Task.CompletedTask;
     }
