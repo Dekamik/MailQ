@@ -36,29 +36,9 @@ public class Emailer : IEmailer, IDisposable
             {
                 await _smtp.AuthenticateAsync(_configuration.EmailUser, _configuration.EmailPassword);
             }
-            catch (ObjectDisposedException ex)
+            catch (Exception ex)
             {
-                Log.Error(ex, "The SmtpClient has already been disposed");
-                throw;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Log.Error(ex, "The SmtpClient is not connected");
-                throw;
-            }
-            catch (AuthenticationException ex)
-            {
-                Log.Error(ex, "Failed to log in using supplied credentials");
-                throw;
-            }
-            catch (IOException ex)
-            {
-                Log.Error(ex, "An I/O error occurred");
-                throw;
-            }
-            catch (ProtocolException ex)
-            {
-                Log.Error(ex, "A protocol error occurred");
+                Log.Error(ex, "An exception occurred");
                 throw;
             }
             Log.Information("Logged in");
