@@ -42,8 +42,10 @@ public class Worker : BackgroundService
             To = { to }
         };
         var buffer = mail.ToByteArray();
-        
-        channel.BasicPublish(exchange, routingKey, null, buffer);
+
+        var properties = channel.CreateBasicProperties();
+        properties.CorrelationId = Guid.NewGuid().ToString();
+        channel.BasicPublish(exchange, routingKey, properties, buffer);
         
         _logger.LogInformation("Mail published!");
     }
