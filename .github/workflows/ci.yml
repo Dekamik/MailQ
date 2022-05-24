@@ -68,7 +68,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
       
       - name: Compress protobuf
-        run: zip protobuf.zip MailQ.Protobuf/**/*.proto
+        run: zip protobuf.zip MailQ.Protobuf/*.proto
       
       - name: Upload protobuf
         uses: actions/upload-release-asset@v1
