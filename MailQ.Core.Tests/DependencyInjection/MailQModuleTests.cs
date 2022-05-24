@@ -22,7 +22,21 @@ public class MailQModuleTests
     public void Load_Any_ResolvesAllRegisteredDependencies()
     {
         Environment.SetEnvironmentVariable("RABBITMQ_CONNECTION_STRING", "amqp://localhost:0");
-        
+
+        PerformTest();
+    }
+
+    [Fact]
+    public void Load_GmailClientSet_ResolvesAllRegisteredDependencies()
+    {
+        Environment.SetEnvironmentVariable("RABBITMQ_CONNECTION_STRING", "amqp://localhost:0");
+        Environment.SetEnvironmentVariable("GMAIL_CLIENT", "Gmail");
+
+        PerformTest();
+    }
+
+    private void PerformTest()
+    {
         var configuration = new MailQConfiguration();
         var configurationFactory = A.Fake<IMailQConfigurationFactory>();
         A.CallTo(() => configurationFactory.LoadFromEnvironmentVariables())

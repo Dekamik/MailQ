@@ -1,8 +1,9 @@
+using MailQ.Protobuf;
 using MimeKit;
 
 namespace MailQ.Core.Email;
 
-public interface IEmailer
+public interface IEmailService
 {
     Task SendEmail(MimeMessage message);
 }

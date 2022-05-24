@@ -1,6 +1,8 @@
 using Autofac;
 using MailQ.Core.Configuration;
 using MailQ.Core.Email;
+using MailQ.Core.Email.Generic;
+using MailQ.Core.Email.Gmail;
 using MailQ.Core.Polling;
 using RabbitMQ.Client;
 
@@ -21,8 +23,17 @@ public class MailQModule : Module
             .As<IConnectionFactory>();
         
         builder.RegisterScoped<ISmtpClientFactory, SmtpClientFactory>();
-        builder.RegisterSingleton<IEmailer, Emailer>();
-        
+
+        var client = EnvironmentVariables.EmailClient;
+        if (client?.ToLower() == "gmail")
+        {
+            builder.RegisterSingleton<IEmailService, GmailEmailService>();   
+        }
+        else
+        {
+            builder.RegisterSingleton<IEmailService, GenericEmailService>();
+        }
+
         builder.RegisterScoped<IMimeConverter, MimeConverter>();
         builder.RegisterScoped<IConsumerFactory, ConsumerFactory>();
         builder.RegisterSingleton<IPoller, Poller>();

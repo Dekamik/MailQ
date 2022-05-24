@@ -6,12 +6,17 @@ namespace MailQ.Core.Configuration;
 [ExcludeFromCodeCoverage]
 public class MailQConfiguration
 {
-    public string EmailHost { get; set; }
-    public int EmailPort { get; set; }
     public string EmailUser { get; set; }
-    public string EmailPassword { get; set; }
     public string EmailAlias { get; set; }
     public string EmailAddress { get; set; }
+    
+    public string EmailHost { get; set; }
+    public int EmailPort { get; set; }
+    public string EmailPassword { get; set; }
+    
+
+    public string GmailClientId { get; set; }
+    public string GmailClientSecret { get; set; }
     
     public string RabbitMqDataExchange { get; set; }
     public string RabbitMqDataQueue { get; set; }

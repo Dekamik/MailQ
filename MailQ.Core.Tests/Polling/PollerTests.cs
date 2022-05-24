@@ -14,7 +14,7 @@ public class PollerTests
 {
     private readonly MailQConfiguration _configuration;
     private readonly IMimeConverter _mimeConverter;
-    private readonly IEmailer _emailer;
+    private readonly IEmailService _emailService;
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly IConnectionFactory _connectionFactory;
@@ -35,7 +35,7 @@ public class PollerTests
             .Returns(_configuration);
 
         _mimeConverter = A.Fake<IMimeConverter>();
-        _emailer = A.Fake<IEmailer>();
+        _emailService = A.Fake<IEmailService>();
         
         _channel = A.Fake<IModel>();
         _connection = A.Fake<IConnection>();
@@ -48,7 +48,7 @@ public class PollerTests
 
         _consumerFactory = A.Fake<IConsumerFactory>();
 
-        _poller = new Poller(configurationFactory, _connectionFactory, _emailer, _mimeConverter, _consumerFactory);
+        _poller = new Poller(configurationFactory, _connectionFactory, _emailService, _mimeConverter, _consumerFactory);
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class PollerTests
 
         A.CallTo(() => _mimeConverter.ToMimeMessage(mail))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => _emailer.SendEmail(mimeMessage))
+        A.CallTo(() => _emailService.SendEmail(mimeMessage))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => _channel.BasicAck(ea.DeliveryTag, false))
             .MustHaveHappenedOnceExactly();

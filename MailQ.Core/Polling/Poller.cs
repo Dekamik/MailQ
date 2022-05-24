@@ -14,18 +14,18 @@ public class Poller : IPoller, IDisposable
     private readonly IConnection _connection;
     private static IModel _channel = null!;
     private readonly MailQConfiguration _configuration;
-    private static IEmailer _emailer = null!;
+    private static IEmailService _emailService = null!;
     private static IMimeConverter _mimeConverter = null!;
     private readonly IConsumerFactory _consumerFactory;
     
     public readonly EventHandler<BasicDeliverEventArgs> HandleMailEvent = MailEvent;
 
     public Poller(IMailQConfigurationFactory configurationFactory, IConnectionFactory connectionFactory, 
-        IEmailer emailer, IMimeConverter mimeConverter, IConsumerFactory consumerFactory)
+        IEmailService emailService, IMimeConverter mimeConverter, IConsumerFactory consumerFactory)
     {
         _consumerFactory = consumerFactory;
         _mimeConverter = mimeConverter;
-        _emailer = emailer;
+        _emailService = emailService;
         _configuration = configurationFactory.LoadFromEnvironmentVariables();
         _connection = connectionFactory.CreateConnection();
         Log.Information("Connection to RabbitMQ established");
@@ -78,7 +78,7 @@ public class Poller : IPoller, IDisposable
                     mail.Subject, mail.Body, string.Join(", ", mail.To));
 
                 var mimeMessage = _mimeConverter.ToMimeMessage(mail);
-                await _emailer.SendEmail(mimeMessage);
+                await _emailService.SendEmail(mimeMessage);
             }
             finally
             {

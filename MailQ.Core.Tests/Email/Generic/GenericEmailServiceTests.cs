@@ -3,16 +3,17 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MailQ.Core.Configuration;
 using MailQ.Core.Email;
+using MailQ.Core.Email.Generic;
 using MimeKit;
 
-namespace MailQ.Core.Tests.Email;
+namespace MailQ.Core.Tests.Email.Generic;
 
-public class EmailerTests
+public class GenericEmailServiceTests
 {
     private readonly ISmtpClient _smtp;
-    private readonly Emailer _emailer;
+    private readonly GenericEmailService _genericEmailService;
 
-    public EmailerTests()
+    public GenericEmailServiceTests()
     {
         var configuration = new MailQConfiguration
         {
@@ -30,7 +31,7 @@ public class EmailerTests
         A.CallTo(() => smtpClientFactory.CreateSmtpClient())
             .Returns(_smtp);
         
-        _emailer = new Emailer(configurationFactory, smtpClientFactory);
+        _genericEmailService = new GenericEmailService(configurationFactory, smtpClientFactory);
     }
 
     [Fact]
@@ -39,7 +40,7 @@ public class EmailerTests
         var configurationFactory = A.Fake<IMailQConfigurationFactory>();
         var clientFactory = A.Fake<ISmtpClientFactory>();
 
-        var _ = new Emailer(configurationFactory, clientFactory);
+        var _ = new GenericEmailService(configurationFactory, clientFactory);
 
         A.CallTo(() => clientFactory.CreateSmtpClient())
             .MustHaveHappenedOnceExactly();
@@ -48,7 +49,7 @@ public class EmailerTests
     [Fact]
     public void Dispose_Any_DisposesSmtpClient()
     {
-        _emailer.Dispose();
+        _genericEmailService.Dispose();
 
         A.CallTo(() => _smtp.Disconnect(true, default))
             .MustHaveHappenedOnceExactly();
@@ -65,7 +66,7 @@ public class EmailerTests
         A.CallTo(() => _smtp.IsAuthenticated)
             .Returns(true);
 
-        await _emailer.SendEmail(message);
+        await _genericEmailService.SendEmail(message);
 
         A.CallTo(() => _smtp.SendAsync(message, default, null))
             .MustHaveHappenedOnceExactly();
@@ -80,7 +81,7 @@ public class EmailerTests
         A.CallTo(() => _smtp.IsAuthenticated)
             .Returns(true);
 
-        await _emailer.SendEmail(message);
+        await _genericEmailService.SendEmail(message);
 
         A.CallTo(() => _smtp.ConnectAsync("AnyHost", 25, SecureSocketOptions.StartTls, default))
             .MustHaveHappenedOnceExactly();
@@ -95,7 +96,7 @@ public class EmailerTests
         A.CallTo(() => _smtp.IsAuthenticated)
             .Returns(false);
 
-        await _emailer.SendEmail(message);
+        await _genericEmailService.SendEmail(message);
 
         A.CallTo(() => _smtp.AuthenticateAsync("AnyUser", "AnyPassword", default))
             .MustHaveHappenedOnceExactly();

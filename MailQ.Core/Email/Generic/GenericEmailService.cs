@@ -1,18 +1,17 @@
-﻿using MailKit;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MailQ.Core.Configuration;
 using MimeKit;
 using Serilog;
 
-namespace MailQ.Core.Email;
+namespace MailQ.Core.Email.Generic;
 
-public class Emailer : IEmailer, IDisposable 
+public class GenericEmailService : IGenericEmailService
 {
     private readonly ISmtpClient _smtp;
     private readonly MailQConfiguration _configuration;
 
-    public Emailer(IMailQConfigurationFactory configurationFactory, ISmtpClientFactory smtpClientFactory)
+    public GenericEmailService(IMailQConfigurationFactory configurationFactory, ISmtpClientFactory smtpClientFactory)
     {
         _configuration = configurationFactory.LoadFromEnvironmentVariables();
         _smtp = smtpClientFactory.CreateSmtpClient();
@@ -32,15 +31,7 @@ public class Emailer : IEmailer, IDisposable
         if (!_smtp.IsAuthenticated)
         {
             Log.Information("Logging in as {User}", _configuration.EmailUser);
-            try
-            {
-                await _smtp.AuthenticateAsync(_configuration.EmailUser, _configuration.EmailPassword);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "An exception occurred");
-                throw;
-            }
+            await _smtp.AuthenticateAsync(_configuration.EmailUser, _configuration.EmailPassword);
             Log.Information("Logged in");
         }
 
