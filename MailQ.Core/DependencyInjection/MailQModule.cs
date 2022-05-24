@@ -23,7 +23,6 @@ public class MailQModule : Module
         builder.RegisterScoped<ISmtpClientFactory, SmtpClientFactory>();
         builder.RegisterSingleton<IEmailer, Emailer>();
         
-        builder.RegisterScoped<IConnectionFactory, ConnectionFactory>();
         builder.RegisterScoped<IMimeConverter, MimeConverter>();
         builder.RegisterScoped<IConsumerFactory, ConsumerFactory>();
         builder.RegisterSingleton<IPoller, Poller>();
