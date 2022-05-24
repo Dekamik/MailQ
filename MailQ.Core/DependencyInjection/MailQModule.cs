@@ -27,6 +27,7 @@ public class MailQModule : Module
         var client = EnvironmentVariables.EmailClient;
         if (client?.ToLower() == "gmail")
         {
+            builder.RegisterScoped<IGmailServiceFactory, GmailServiceFactory>();
             builder.RegisterSingleton<IEmailService, GmailEmailService>();   
         }
         else
