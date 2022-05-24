@@ -67,5 +67,16 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
       
+      - name: Compress protobuf
+        run: zip protobuf.zip MailQ.Protobuf/**/*.proto
+      
+      - name: Upload protobuf
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: protobuf.zip
+          asset_name: protobuf_${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip
+      
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
