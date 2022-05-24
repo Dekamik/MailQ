@@ -48,5 +48,7 @@ public class Worker : BackgroundService
         channel.BasicPublish(exchange, routingKey, properties, buffer);
         
         _logger.LogInformation("Mail published!");
+        
+        Environment.Exit(0);
     }
 }

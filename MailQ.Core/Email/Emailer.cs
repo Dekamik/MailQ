@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using MailKit;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using MailQ.Core.Configuration;
 using MimeKit;
@@ -21,16 +22,46 @@ public class Emailer : IEmailer, IDisposable
     {
         if (!_smtp.IsConnected)
         {
+            Log.Information("Connecting to email server at {Host}:{Port}", 
+                _configuration.EmailHost, _configuration.EmailPort);
             await _smtp.ConnectAsync(_configuration.EmailHost, _configuration.EmailPort, 
                 SecureSocketOptions.StartTls);
-            Log.Information("Connected to email server at {Host}:{Port}", 
-                _configuration.EmailHost, _configuration.EmailPort);
+            Log.Information("Connection to email server established");
         }
 
         if (!_smtp.IsAuthenticated)
         {
-            await _smtp.AuthenticateAsync(_configuration.EmailUser, _configuration.EmailPassword);
-            Log.Information("Logged in as {User}", _configuration.EmailUser);
+            Log.Information("Logging in as {User}", _configuration.EmailUser);
+            try
+            {
+                await _smtp.AuthenticateAsync(_configuration.EmailUser, _configuration.EmailPassword);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Log.Error(ex, "The SmtpClient has already been disposed");
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Log.Error(ex, "The SmtpClient is not connected");
+                throw;
+            }
+            catch (AuthenticationException ex)
+            {
+                Log.Error(ex, "Failed to log in using supplied credentials");
+                throw;
+            }
+            catch (IOException ex)
+            {
+                Log.Error(ex, "An I/O error occurred");
+                throw;
+            }
+            catch (ProtocolException ex)
+            {
+                Log.Error(ex, "A protocol error occurred");
+                throw;
+            }
+            Log.Information("Logged in");
         }
 
         await _smtp.SendAsync(message);
