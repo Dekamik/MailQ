@@ -72,6 +72,8 @@ jobs:
       
       - name: Upload protobuf
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: protobuf.zip
