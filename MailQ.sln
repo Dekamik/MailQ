@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Core.Tests", "MailQ.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.Protobuf", "MailQ.Protobuf\MailQ.Protobuf.csproj", "{FEB6F4CA-9B0D-4A6A-8D5B-6391CB060596}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailQ.IntegrationTest", "MailQ.IntegrationTest\MailQ.IntegrationTest.csproj", "{5A66CA1A-E4E3-4210-AE25-9699E3C2D26D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{FEB6F4CA-9B0D-4A6A-8D5B-6391CB060596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEB6F4CA-9B0D-4A6A-8D5B-6391CB060596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEB6F4CA-9B0D-4A6A-8D5B-6391CB060596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A66CA1A-E4E3-4210-AE25-9699E3C2D26D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A66CA1A-E4E3-4210-AE25-9699E3C2D26D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A66CA1A-E4E3-4210-AE25-9699E3C2D26D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A66CA1A-E4E3-4210-AE25-9699E3C2D26D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

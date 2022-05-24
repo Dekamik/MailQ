@@ -23,7 +23,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal
   
-  build:
+  build-consumer:
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -80,5 +80,52 @@ jobs:
           asset_name: protobuf_${{ github.event.release.tag_name }}.zip
           asset_content_type: application/zip
       
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+  
+  build-integrationtest:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-integrationtest-buildx${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-integrationtest-buildx
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Setup Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: MailQ.IntegrationTest/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/mailq-integrationtest:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/mailq-integrationtest:${{ github.event.release.tag_name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
