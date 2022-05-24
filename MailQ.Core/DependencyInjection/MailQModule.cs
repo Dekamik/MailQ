@@ -11,6 +11,14 @@ public class MailQModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.RegisterSingleton<IMailQConfigurationFactory, MailQConfigurationFactory>();
+
+        var connectionFactory = new ConnectionFactory
+        {
+            Uri = new Uri(EnvironmentVariables.RabbitMqConnectionString
+                          ?? throw new InvalidOperationException("RabbitMQ connection string must be set"))
+        };
+        builder.RegisterInstance(connectionFactory)
+            .As<IConnectionFactory>();
         
         builder.RegisterScoped<ISmtpClientFactory, SmtpClientFactory>();
         builder.RegisterSingleton<IEmailer, Emailer>();

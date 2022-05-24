@@ -21,6 +21,8 @@ public class MailQModuleTests
     [Fact]
     public void Load_Any_ResolvesAllRegisteredDependencies()
     {
+        Environment.SetEnvironmentVariable("RABBITMQ_CONNECTION_STRING", "amqp://localhost:0");
+        
         var configuration = new MailQConfiguration();
         var configurationFactory = A.Fake<IMailQConfigurationFactory>();
         A.CallTo(() => configurationFactory.LoadFromEnvironmentVariables())
